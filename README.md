@@ -1,5 +1,7 @@
 # Frege Email
 
+[![Build Status](https://travis-ci.org/y-taka-23/frege-email.svg?branch=master)](https://travis-ci.org/y-taka-23/frege-email)
+
 __Frege Email__ aims to provide a simple API for sending emails via SMTP. It will help you, for instance, to equip your web application written in Frege with notifications.
 
 The library is built by wrapping Java's [Apache Commons Email](https://commons.apache.org/proper/commons-email/index.html). So you would be able to see it as a working example of Frege-Java interoperations.
@@ -83,4 +85,4 @@ testMail = email.{ subject  = "Test Mail"
 
 ## License
 
-This project is released under the Apache 2.0 license. For more details, see LICENSE file.
+This project is released under the Apache 2.0 license. For more details, see [LICENSE](./LICENSE) file.
