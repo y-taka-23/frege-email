@@ -21,3 +21,6 @@ dependencies {
     compile 'org.apache.commons:commons-email:1.4'
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}
