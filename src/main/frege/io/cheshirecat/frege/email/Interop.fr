@@ -1,0 +1,55 @@
+module io.cheshirecat.frege.email.Interop where
+
+
+data JMultiPartEmail = native org.apache.commons.mail.MultiPartEmail where
+    native new               :: ()
+                             -> STMutable s JMultiPartEmail
+    native setHostName       :: Mutable s JMultiPartEmail
+                             -> String -> ST s  ()
+    native setSmtpPort       :: Mutable s JMultiPartEmail
+                             -> Int -> ST s ()
+    native setSslSmtpPort    :: Mutable s JMultiPartEmail
+                             -> String -> ST s ()
+    native setSSLOnConnect   :: Mutable s JMultiPartEmail
+                             -> Bool -> ST s ()
+    native setAuthentication :: Mutable s JMultiPartEmail
+                             -> String -> String -> ST s ()
+    native addTo             :: Mutable s JMultiPartEmail
+                             -> String -> String -> ST s ()
+                                throws JEmailException
+    native addCc             :: Mutable s JMultiPartEmail
+                             -> String -> String -> ST s ()
+                                throws JEmailException
+    native addBcc            :: Mutable s JMultiPartEmail
+                             -> String -> String -> ST s ()
+                                throws JEmailException
+    native setFrom           :: Mutable s JMultiPartEmail
+                             -> String -> String -> ST s ()
+                                throws JEmailException
+    native setSubject        :: Mutable s JMultiPartEmail
+                             -> String -> ST s ()
+    native setMsg            :: Mutable s JMultiPartEmail
+                             -> String -> ST s ()
+                                throws JEmailException
+    native attach            :: Mutable s JMultiPartEmail
+                             -> Mutable s JEmailAttachment -> ST s ()
+                                throws JEmailException
+    native send              :: MutableIO JMultiPartEmail
+                             -> IO ()
+                                throws JEmailException
+
+data JEmailAttachment = native org.apache.commons.mail.EmailAttachment where
+    native new            :: ()
+                          -> STMutable s JEmailAttachment
+    native setName        :: Mutable s JEmailAttachment
+                          -> String -> ST s ()
+    native setDescription :: Mutable s JEmailAttachment
+                          -> String -> ST s ()
+    native setDisposition :: Mutable s JEmailAttachment
+                          -> String -> ST s ()
+    native setPath        :: Mutable s JEmailAttachment
+                          -> String -> ST s ()
+
+data JEmailException = native org.apache.commons.mail.EmailException
+derive Exceptional JEmailException
+

@@ -1,0 +1,111 @@
+module io.cheshirecat.frege.Email where
+
+import io.cheshirecat.frege.email.Type
+import io.cheshirecat.frege.email.Interop
+
+
+{--
+    Sends an email via the given server with the authentication.
+
+    It can throw 'EmailException' in case of something wrong with sending.
+-}
+sendEmail :: SMTPServer -> Maybe Authentication -> Email -> IO ()
+sendEmail s ma e = do
+    jmpe <- JMultiPartEmail.new ()
+    setSMTPServer jmpe s
+    setEmail jmpe e
+    case ma of
+        Nothing -> do
+            jmpe.send
+        Just a -> do
+            setAuthentication jmpe a
+            jmpe.send
+
+type EmailException = JEmailException
+
+private setSMTPServer :: Mutable s JMultiPartEmail
+                      -> SMTPServer -> STMutable s JMultiPartEmail
+private setSMTPServer jmpe s = do
+    jmpe.setHostName s.hostName
+    case s.portNumber of
+        SMTP p -> do
+            jmpe.setSSLOnConnect false
+            jmpe.setSmtpPort p
+            return jmpe
+        SSLSMTP p -> do
+            jmpe.setSSLOnConnect true
+            jmpe.setSslSmtpPort $ show p
+            return jmpe
+
+private setEmail :: Mutable s JMultiPartEmail
+                 -> Email -> STMutable s JMultiPartEmail
+private setEmail jmpe e = do
+    jmpe.setSubject e.subject
+    jmpe.setFrom e.from.email e.from.name
+    forM_ e.to  $ \addr -> jmpe.addTo  addr.email addr.name
+    forM_ e.cc  $ \addr -> jmpe.addCc  addr.email addr.name
+    forM_ e.bcc $ \addr -> jmpe.addBcc addr.email addr.name
+    jmpe.setMsg e.message
+    forM_ e.attached $ attach jmpe
+    return jmpe
+
+private attach :: Mutable s JMultiPartEmail
+               -> Attachment -> STMutable s JMultiPartEmail
+private attach jmpe att = do
+    jatt <- JEmailAttachment.new ()
+    jatt.setName att.name
+    jatt.setDescription att.description
+    jatt.setPath att.path
+    jmpe.attach jatt
+    return jmpe
+
+private setAuthentication :: Mutable s JMultiPartEmail
+                          -> Authentication -> STMutable s JMultiPartEmail
+private setAuthentication jmpe a = do
+    jmpe.setAuthentication a.userName a.password
+    return jmpe
+
+--- An SMTP server with port 25.
+smtpServer :: SMTPServer
+smtpServer = SMTPServer
+    { hostName   = "localhost"
+    , portNumber = SMTP 25
+    }
+
+--- An SMTP server with port 465, supports SMTP over SSL
+sslSMTPServer :: SMTPServer
+sslSMTPServer = SMTPServer
+    { hostName   = "localhost"
+    , portNumber = SSLSMTP 465
+    }
+
+authentication :: Authentication
+authentication = Authentication
+    { userName = ""
+    , password = ""
+    }
+
+email :: Email
+email = Email
+    { subject  = ""
+    , from     = address
+    , to       = []
+    , cc       = []
+    , bcc      = []
+    , message  = ""
+    , attached = []
+    }
+
+address :: Address
+address = Address
+    { email = ""
+    , name  = ""
+    }
+
+attachment :: Attachment
+attachment = Attachment
+    { name        = ""
+    , description = ""
+    , path        = ""
+    }
+

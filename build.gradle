@@ -1,0 +1,23 @@
+plugins {
+    id 'org.frege-lang' version '0.8'
+}
+
+apply plugin: 'org.frege-lang'
+apply plugin: 'maven'
+
+group            = 'io.cheshirecat'
+archivesBaseName = 'frege-email'
+version          = '0.1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.frege-lang:frege:3.23.288-gaa3af0c'
+    compile 'org.apache.commons:commons-email:1.4'
+}
+

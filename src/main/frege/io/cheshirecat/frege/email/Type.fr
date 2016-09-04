@@ -1,0 +1,50 @@
+module io.cheshirecat.frege.email.Type where
+
+
+data SMTPServer = SMTPServer
+    { hostName   :: String
+    , portNumber :: PortNumber
+    }
+derive Eq   SMTPServer
+derive Show SMTPServer
+
+data PortNumber =
+      SMTP    Int
+    | SSLSMTP Int
+derive Eq   PortNumber
+derive Show PortNumber
+
+data Authentication = Authentication
+    { userName :: String
+    , password :: String
+    }
+derive Eq   Authentication
+derive Show Authentication
+
+data Email = Email
+    { subject  :: String
+    , from     :: Address
+    , to       :: [Address]
+    , cc       :: [Address]
+    , bcc      :: [Address]
+    , message  :: String
+    , attached :: [Attachment]
+    }
+derive Eq   Email
+derive Show Email
+
+data Address = Address
+    { email :: String
+    , name  :: String
+    }
+derive Eq   Address
+derive Show Address
+
+data Attachment = Attachment
+    { name        :: String
+    , description :: String
+    , path        :: String
+    }
+derive Eq   Attachment
+derive Show Attachment
+
