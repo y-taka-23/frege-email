@@ -1,6 +1,7 @@
 # Frege Email
 
 [![Build Status](https://travis-ci.org/y-taka-23/frege-email.svg?branch=master)](https://travis-ci.org/y-taka-23/frege-email)
+[ ![Download](https://api.bintray.com/packages/y-taka-23/maven/frege-email/images/download.svg) ](https://bintray.com/y-taka-23/maven/frege-email/_latestVersion)
 
 __Frege Email__ aims to provide a simple API for sending emails via SMTP. It will help you, for instance, to equip your web application written in Frege with notifications.
 
@@ -77,11 +78,29 @@ testMail = email.{ subject  = "Test Mail"
 
 ## Build Settings
 
+### build.gradle
+
+The binaries are avarable at Bintay:
+
+```
+repositories {
+    maven {
+        url 'http://dl.bintray.com/y-taka-23/maven'
+    }
+}
+```
+
+Add your dependencies:
+
+```
+compile 'io.cheshirecat:frege-email:0.1.0'
+```
+
 ### Version compatibility
 
 | Frege Email | Frege Compiler | Target JDK | Chinook (FYI) |
 |:-:|:-:|:-:|:-:|
-| 0.1.0-SNAPSHOT (HEAD) | [3.23.288-gaa3af0c](https://bintray.com/bintray/jcenter/org.frege-lang%3Afrege/3.23.288-gaa3af0c) | 1.8 | [0.2.0](https://bintray.com/januslynd/maven/chinook-core/0.2.0) |
+| 0.1.0 | [3.23.288-gaa3af0c](https://bintray.com/bintray/jcenter/org.frege-lang%3Afrege/3.23.288-gaa3af0c) | 1.8 | [0.2.0](https://bintray.com/januslynd/maven/chinook-core/0.2.0) |
 
 ## License
 

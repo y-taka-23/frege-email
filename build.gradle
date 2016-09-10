@@ -1,13 +1,17 @@
 plugins {
-    id 'org.frege-lang' version '0.8'
+    id 'org.frege-lang'    version '0.5'
+    id 'com.jfrog.bintray' version '1.7'
 }
 
 apply plugin: 'org.frege-lang'
-apply plugin: 'maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
 
 group            = 'io.cheshirecat'
 archivesBaseName = 'frege-email'
-version          = '0.1.0-SNAPSHOT'
+version          = '0.1.0'
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -23,4 +27,61 @@ dependencies {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.0'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from compileFrege.sourcePaths
+}
+
+task javadocJar(type: Jar, dependsOn:fregeDoc) {
+    classifier = 'javadoc'
+    from fregeDoc.targetDir
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintray_user')   ? bintray_user   : ''
+    key  = project.hasProperty('bintray_apikey') ? bintray_apikey : ''
+
+    pkg {
+        repo = 'maven'
+        name = 'frege-email'
+        desc = 'A Frege library for sending emails via SMTP.'
+
+        websiteUrl      = 'https://github.com/y-taka-23/frege-email'
+        issueTrackerUrl = 'https://github.com/y-taka-23/frege-email/issues'
+        vcsUrl          = 'https://github.com/y-taka-23/frege-email.git'
+        licenses        = [ 'Apache-2.0' ]
+
+        publicDownloadNumbers = true
+
+        githubRepo             = 'y-taka-23/frege-email'
+        githubReleaseNotesFile = 'README.md'
+
+        version {
+            name     = project.version
+            released = new Date()
+            gpg {
+                sign = true
+                passphrase = project.hasProperty('bintray_gpg_password') ? bintray_gpg_password : ''
+            }
+        }
+    }
+
+    publications   = [ 'mavenPublication' ]
+    configurations = [ 'archives' ]
 }
